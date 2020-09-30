@@ -498,7 +498,7 @@ class Game extends Component {
       for (let j = 0; j < 3; j++) {
         if (mat[i][j] === "") {
           mat[i][j] = "O";
-          val = this.minmax(mat, -100, false);
+          val = this.minmax(mat, -6, false);
           mat[i][j] = "";
 
           if (val > best) {
