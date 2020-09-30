@@ -104,13 +104,13 @@ textarea{
   }
   #gameOver {
     animation: color-change-again 1s infinite;
-    margin-top: 0%;
-    margin-bottom: 0%;
+    margin-top: 0% !important;
+    margin-bottom: 0% !important;
   }
   @keyframes color-change-again {
     0% {
       color: green;
-      transform: scale(1.1);
+      transform: scale(1.03);
     }
     50% {
       color: yellow;
@@ -118,7 +118,7 @@ textarea{
     }
     100% {
       color: green;
-      transform: scale(1.5);
+      transform: scale(1.03);
     }
   }
   
