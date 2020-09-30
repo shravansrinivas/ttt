@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/shravansrinivas/ttt#readme",
   "engines": {
-    "npm": "~12.18.3"
+    "npm": "12.x.x",
+    "node": "6.x.x"
   }
 }
