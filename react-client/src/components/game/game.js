@@ -161,7 +161,8 @@ class Game extends Component {
             cpuPlaying: response.data[0].gameType === "vsCPU",
           });
           if (response.data[0].gameOver) {
-            // alert("This game is already over!");
+            
+            alert("This game is already over!");
             self.checkGameCompletion();
             if (
               self.state.gameType === "vsCPU" &&
@@ -170,7 +171,7 @@ class Game extends Component {
               self.cpuMove();
             }
           }
-        } // else alert("Invalid Game ID, Please check again :)");
+        } else alert("Invalid Game ID, Please check again :)");
       })
       .catch(function (error) {
         console.log(error);
@@ -199,13 +200,14 @@ class Game extends Component {
     console.log(e.target.value);
   };
   joinGame() {
-    this.setState({ loading: true });
+    
     setTimeout(() => {
       if (this.state.gameId.length !== 5) {
         alert("Game ID must be of length 5 characters!");
         this.setState({loading:false});
         return;
       }
+      this.setState({ loading: true });
       let self = this;
       this.getGameData(self.state.gameId);
       if (this.state.gameOver) this.checkGameCompletion();
@@ -589,27 +591,28 @@ class Game extends Component {
     setTimeout(()=>{
       this.setState({ loading: true });
       this.setState({
-      gameLevel: "hard",
-      bgArray: Array(9).fill(""),
-      cpuPlayerInput: "X",
-      cpuPlaying: false,
-      // cpuTeam: 'O',
-      joinGameInput: "O",
-      createGameInput: "X",
-
-      player: "",
-      gameId: "",
-      winner: undefined,
-      totalMoves: 0,
-      gameStatus: "In Progress",
-      mode: "home",
-      loading: false,
-      gameType: "-",
-      currentTurn: "",
-      // joiningPlayer: "O",
-      gameOver: false,
-      boxes: Array(9).fill(""),
-      check: true,
+        cpuPlayer: "X",
+        gameLevel: "hard",
+        bgArray: Array(9).fill(""),
+        cpuPlayerInput: "X",
+        cpuPlaying: false,
+        // cpuTeam: 'O',
+        joinGameInput: "O",
+        createGameInput: "X",
+  
+        player: "",
+        gameId: "",
+        winner: undefined,
+        totalMoves: 0,
+        gameStatus: "In Progress",
+        mode: "home",
+        loading: false,
+        gameType: "-",
+        currentTurn: "",
+        // joiningPlayer: "O",
+        gameOver: false,
+        boxes: Array(9).fill(""),
+        check: true,
     });
     this.gameData = {
       boxes: Array(9).fill(""),
