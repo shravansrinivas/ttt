@@ -5,7 +5,7 @@ const axios = require("axios");
 const dotenv = require("dotenv").config();
 
 // let URL_BASE= process.env.REACT_APP_BACKEND_URL_BASE;
-let URL_BASE = "/api/";
+let URL_BASE = "http://localhost:3005/api/";
 
 class Game extends Component {
   constructor() {
@@ -14,6 +14,7 @@ class Game extends Component {
     this.goHome = this.goHome.bind(this);
     this.createNewGame = this.createNewGame.bind(this);
     this.playVsCPU = this.playVsCPU.bind(this);
+    this.restartMatch = this.restartMatch.bind(this);
     this.state = {
       cpuPlayer: "X",
       gameLevel: "hard",
@@ -23,7 +24,8 @@ class Game extends Component {
       // cpuTeam: 'O',
       joinGameInput: "O",
       createGameInput: "X",
-
+      xWins: 0,
+      oWins: 0,
       player: "",
       gameId: "",
       winner: undefined,
@@ -49,7 +51,7 @@ class Game extends Component {
 
   componentDidUpdate() {
     let self = this;
-    //if(this.state.gameOver){this.checkGameCompletion(); this.setState({check:false})}
+    //if(this.state.gameOver){this.colorBlack(); this.setState({check:false})}
     if (
       self.state.mode === "game" &&
       self.state.currentTurn !== self.state.player &&
@@ -152,17 +154,20 @@ class Game extends Component {
                 : self.state.joinGameInput,
             gameStatus: response.data[0].gameStatus,
             winner: response.data[0].winner,
+            xWins: response.data[0].xWins,
+            oWins: response.data[0].oWins,
+
             gameOver: response.data[0].gameOver,
             gameType: response.data[0].gameType,
-            currentTurn: response.data[0].currentTurn,
+            currentTurn: response.data[0].totalMoves%2===0?'X':'O',
             cpuPlayer: response.data[0].cpuPlayer,
             mode: "game",
             totalMoves: response.data[0].totalMoves,
             cpuPlaying: response.data[0].gameType === "vsCPU",
           });
           if (response.data[0].gameOver) {
-            alert("This game is already over!");
-            self.checkGameCompletion();
+            //alert("This game is already over!");
+            self.colorBlack();
             if (
               self.state.gameType === "vsCPU" &&
               self.state.currentTurn !== self.state.player
@@ -210,7 +215,7 @@ class Game extends Component {
 
       let self = this;
       this.getGameData(self.state.gameId);
-      if (this.state.gameOver) this.checkGameCompletion();
+      if (this.state.gameOver) this.colorBlack();
 
       if (
         self.state.joinGameInput !== self.state.player &&
@@ -225,7 +230,48 @@ class Game extends Component {
       self.setState({ loading: false });
     }, 300);
   }
-  checkWin() {}
+  colorBlack(){
+    var winningCombo = [
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+    ];
+    for (let i = 0; i < winningCombo.length; i++) {
+      var currentState = this.state.boxes;
+
+      if (
+        currentState[winningCombo[i][0]] === currentState[winningCombo[i][1]] &&
+        currentState[winningCombo[i][1]] === currentState[winningCombo[i][2]] &&
+        currentState[winningCombo[i][2]] !== ""
+      ) {
+        // if (currentState[winningCombo[i][0]])
+        //{
+        console.log(winningCombo[i]);
+        let temp = Array(9).fill("");
+        winningCombo[i].forEach((x) => {
+          temp[x] = "black";
+        });
+        
+        this.setState({
+          bgArray: temp,
+          winner: currentState[winningCombo[i][0]],
+          gameOver: true,
+          gameStatus:
+            "GameOver-Match Won by " + currentState[winningCombo[i][0]],
+        });
+        
+        break;
+        //}
+      }
+    }
+    if(this.state.gameOver) return true;
+    else return false;
+  }
   checkGameCompletion() {
     var winningCombo = [
       [0, 3, 6],
@@ -252,6 +298,7 @@ class Game extends Component {
         winningCombo[i].forEach((x) => {
           temp[x] = "black";
         });
+        
         this.setState({
           bgArray: temp,
           winner: currentState[winningCombo[i][0]],
@@ -259,7 +306,8 @@ class Game extends Component {
           gameStatus:
             "GameOver-Match Won by " + currentState[winningCombo[i][0]],
         });
-        //    break;
+        
+        break;
         //}
       }
     }
@@ -272,21 +320,24 @@ class Game extends Component {
         gameStatus: "GameOver-Match Drawn!",
       });
     }
-    if (this.state.gameOver) return true;
+    if (this.state.gameOver) {this.updateWin();return true;}
     else return false;
   }
 
   updateAfterClick() {
     var self = this;
+    console.log(this.state)
     axios.patch(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
       boxes: self.state.boxes,
       gameOver: self.state.gameOver,
       totalMoves: self.state.totalMoves,
       gameStatus: self.state.gameStatus,
-      currentTurn: self.state.currentTurn === "X" ? "O" : "X",
+      currentTurn: self.state.totalMoves%2 === 0 ? "X" : "O",
       gameLevel: self.state.gameLevel,
       cpuPlayer: self.state.cpuPlayer,
+      xWins: self.state.xWins,
+      oWins: self.state.oWins,
     });
   }
   cpuMoveDone() {
@@ -301,6 +352,8 @@ class Game extends Component {
       currentTurn: self.state.cpuPlayer,
       gameLevel: self.state.gameLevel,
       cpuPlayer: self.state.cpuPlayer,
+      xWins: self.state.xWins,
+      oWins: self.state.oWins,
     });
     if (this.state.cpuPlaying) {
       this.setState({ currentTurn: this.state.player });
@@ -318,21 +371,24 @@ class Game extends Component {
           self.gameData.boxes = res.boxes;
           self.gameData.totalMoves = res.totalMoves;
           self.setState({
-            currentTurn: res.currentTurn,
+            currentTurn: res.totalMoves%2===0?'X':'O',
             winner: res.winner,
             gameStatus: res.gameStatus,
             gameOver: res.gameOver,
             boxes: res.boxes,
             totalMoves: res.totalMoves,
+            xWins: res.xWins,
+            oWins: res.oWins,
           });
           self.gameData.boxes = res.boxes;
-          if (self.state.gameOver) self.checkGameCompletion();
+          
         })
         .catch(function (error) {
           console.log(error);
         });
       if (self.state.gameOver) {
-        if (this.checkGameCompletion()) this.setState({ check: false });
+        self.colorBlack();
+        //this.setState({ check: false });
       }
     }, 1000);
   }
@@ -361,9 +417,10 @@ class Game extends Component {
         console.log(this.gameData.totalMoves);
         this.setState({ totalMoves: this.gameData.totalMoves });
 
-        if (this.checkGameCompletion()) {
-          // alert(this.state.gameStatus);
-        }
+        // if (this.colorBlack()) {
+        //   // alert(this.state.gameStatus);
+        //   this.updateWin();
+        // }
 
         this.updateAfterClick();
         this.setState({
@@ -378,7 +435,48 @@ class Game extends Component {
       }
     }, 500);
   }
-
+  updateWin() {
+    let self = this;
+    self.setState({
+      xWins: this.state.winner === "X" ? this.state.xWins + 1 : this.state.xWins,
+      oWins: this.state.winner === "O" ? this.state.oWins + 1 : this.state.oWins,
+    });
+    setTimeout(()=>{self.updateAfterClick();},500)
+  }
+  restartMatch() {
+    let self = this;
+    self.setState({ loading: true });
+    self.setState({
+      cpuPlayer: "X",
+      //gameLevel: "hard",
+      bgArray: Array(9).fill(""),
+      //cpuPlayerInput: "X",
+      //cpuPlaying: false,
+      // cpuTeam: 'O',
+      //joinGameInput: "O",
+      //createGameInput: "X",
+      //xWins: 0,
+      //oWins:0,
+      //player: "",
+      //gameId: "",
+      winner: undefined,
+      totalMoves: 0,
+      gameStatus: "In Progress",
+      //mode: "home",
+      //gameType: "-",
+      currentTurn: "X",
+      // joiningPlayer: "O",
+      gameOver: false,
+      boxes: Array(9).fill(""),
+      check: true,
+    });
+    self.gameData = {
+      boxes: Array(9).fill(""),
+      totalMoves: 0,
+    };
+    setTimeout(()=>{this.updateAfterClick();},500);
+    self.setState({ loading: false });
+  }
   hasMovesLeft(mat) {
     // If it has an empty space, keep playing
     for (let i = 0; i < 3; i++) {
@@ -579,7 +677,7 @@ class Game extends Component {
     switch (this.state.gameLevel.toLowerCase()) {
       // case "easy":
       //   this.easyCpuMove();
-      //   this.checkGameCompletion();
+      //   this.colorBlack();
       //   this.updateAfterClick();
       //   break;
       case "easy":
@@ -610,14 +708,14 @@ class Game extends Component {
         // cpuTeam: 'O',
         joinGameInput: "O",
         createGameInput: "X",
-
+        xWins: 0,
+        oWins: 0,
         player: "",
         gameId: "",
         winner: undefined,
         totalMoves: 0,
         gameStatus: "In Progress",
         mode: "home",
-        loading: false,
         gameType: "-",
         currentTurn: "",
         // joiningPlayer: "O",
@@ -790,99 +888,130 @@ class Game extends Component {
     else
       return (
         <React.Fragment>
-          <div className="row text-center justify-content-center">
-            <div className="col-12 col-sm-12 col-md-12 ">
-              <button
-                className="btn btn-danger"
-                onClick={this.goHome}
-                value="Home"
-              >
-                <img
-                  src="https://img.icons8.com/material-sharp/20/ffffff/home.png"
-                  alt=""
-                />{" "}
-                Home
-              </button>
-            </div>
-          </div>
           <div className="row app-main-content" id="game">
             {this.state.loading && (
               <div className="loading-cust">Loading&#8230;</div>
             )}
-            <div className="col-12 col-sm-2 col-md-2" id="side-nav-left">
-              <div className="justify-content-center">
-                {!this.state.gameOver && (
-                  <div id="turn" className="side-nav-body">
-                    {this.state.player === this.state.currentTurn
-                      ? "Your Turn"
-                      : this.state.gameType === "vsPlayer"
-                      ? "Opponent's turn"
-                      : "CPU's Turn"}{" "}
-                    <img
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        position: "absolute",
-                      }}
-                      src={
-                        this.state.player === this.state.currentTurn
-                          ? "https://img.icons8.com/color/64/000000/player-male.png"
-                          : "https://img.icons8.com/nolan/64/clock.png"
-                      }
-                      alt=""
-                    />
+            <div className="col-12 col-sm-2 col-md-2 col-lg-2  justify-content-center">
+              <div className="row">
+                <div className="col-12" id="side-nav-right">
+                  <div className="text-center ">
+                    <div className="card text-white bg-primary text-center">
+                      {this.state.gameOver && (
+                        <React.Fragment>
+                          <div className="card-header">Winner</div>
+                          <div className="card-body">
+                            <h5 className="card-title">{this.state.winner}</h5>
+                          </div>
+                        </React.Fragment>
+                      )}
+                      {!this.state.gameOver && (
+                        <React.Fragment>
+                          <div className="card-header">Current Turn</div>
+                          <div className="card-body">
+                            <h5 className="card-title">
+                              {this.state.currentTurn} {"- ("}{" "}
+                              {this.state.cpuPlaying &&
+                              this.state.currentTurn !== this.state.player
+                                ? "CPU"
+                                : this.state.currentTurn !== this.state.player
+                                ? "Opponent"
+                                : "You"}{" "}
+                              {")"}
+                            </h5>
+                            {this.state.player!=this.state.currentTurn && (<p>Waiting for opponent's move!</p>)}
+                          </div>
+                        </React.Fragment>
+                      )}
+                    </div>
                     <br></br>
-                    {this.state.player === this.state.currentTurn
-                      ? "You can play now:)"
-                      : this.state.gameType === "vsPlayer"
-                      ? "Wait till they play:)"
-                      : "Wait till it plays:)"}
+                    <div className="row">
+                      <div className="col-6 col-sm-12 col-md-12 col-lg-12">
+                        <div className="card text-white bg-info text-center">
+                          <div className="card-header">X - Score</div>
+                          <div className="card-body">
+                            <h5 className="card-title">{this.state.xWins} </h5>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="col-6 col-sm-12 col-md-12 col-lg-12">
+                      <br></br>
+                        <div className="card text-white bg-danger text-center">
+                          <div className="card-header">O - Score</div>
+                          <div className="card-body">
+                            <h5 className="card-title">{this.state.oWins} </h5>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                )}
-                {this.state.gameOver && (
-                  <div id="gameOver" className="side-nav-body">
-                    {this.state.player === this.state.winner
-                      ? "Game Over\nYou won :)"
-                      : this.state.winner === "draw"
-                      ? "Game Over\nMatch drawn :/"
-                      : "Game Over\nYou lost :("}
-                  </div>
-                )}
-                {/*   <div className="side-nav-head">
-                  <h3>Game Status</h3>
                 </div>
-                <div className="side-nav-body">{this.state.gameStatus}</div>
-              </div>
-              <div className="text-center ">
-                <div className="side-nav-head">
-                  <h3>Total Moves</h3>
-                </div>
-                <div className="side-nav-body">{this.gameData.totalMoves}</div>
-              </div>
-
-              <div className="text-center ">
-                <div className="side-nav-head">
-                  <h3>Winner</h3>
-                </div>
-                <div className="side-nav-body">
-                  {this.state.gameOver ? this.state.winner.toUpperCase() : "-"}
-                </div>*/}
               </div>
             </div>
             <div className="col-12 col-sm-8 col-md-8">
+              <div className="row text-center justify-content-center">
+                <div className="col-12 col-sm-12 col-md-12 ">
+                  <button
+                    className="btn btn-secondary"
+                    onClick={this.goHome}
+                    value="Home"
+                  >
+                    <img
+                      src="https://img.icons8.com/material-sharp/24/ffffff/home.png"
+                      alt=""
+                    />{" "}
+                    Home
+                  </button>{" "}
+                  {"\t\t"}
+                  {this.state.totalMoves !== 0 && (
+                    <button
+                      className="btn btn-danger"
+                      onClick={this.restartMatch}
+                      value="Home"
+                    >
+                      <img
+                        src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
+                        alt=""
+                      />{" "}
+                      Restart
+                    </button>
+                  )}
+                </div>
+              </div>
+              {this.state.gameOver && (
+                <div class="alert alert-info alert-dismissible" role="alert">
+                  Game Over{" "}
+                  {this.state.player === this.state.winner
+                    ? " and you won:) Hurray!"
+                    : " and you lost:( "}{" "}
+                  <button
+                    className="btn btn-danger"
+                    onClick={this.restartMatch}
+                    value="Home"
+                  >
+                    <img
+                      src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
+                      alt=""
+                    />{" "}
+                    Restart
+                  </button>{" "}
+                  to keep playing :)
+                </div>
+              )}
               <div
                 className="game justify-content-center"
                 id="game"
                 onClick={(e) => this.boxClick(e.target)}
               >
                 {/* {this.state.boxes.map(box=>{
-                  return (<div className="square" data-square={this.state.boxes.indexOf(box)} style={{backgroundColor: this.state.bgArray[this.state.boxes.indexOf(box)]}}>{box}</div> )
+                  return (<div className="square" data-square={this.state.boxes.indexOf(box)} style={{backgroundColor: this.state.totalMoves!==0?this.state.bgArray[th: ""is.state.boxes.indexOf(box)]}}>{box}</div> )
                 })} */}
                 <div
                   className="square"
                   data-square="0"
                   style={{
-                    backgroundColor: this.state.bgArray[0],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[0]: "",
                     color:
                       this.state.bgArray[0] === "black" ? "green" : "black",
                     textDecoration:
@@ -899,7 +1028,7 @@ class Game extends Component {
                   className="square"
                   data-square="1"
                   style={{
-                    backgroundColor: this.state.bgArray[1],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[1]: "",
                     color:
                       this.state.bgArray[1] === "black" ? "green" : "black",
                     textDecoration:
@@ -916,7 +1045,7 @@ class Game extends Component {
                   className="square"
                   data-square="2"
                   style={{
-                    backgroundColor: this.state.bgArray[2],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[2]: "",
                     color:
                       this.state.bgArray[2] === "black" ? "green" : "black",
                     textDecoration:
@@ -933,7 +1062,7 @@ class Game extends Component {
                   className="square"
                   data-square="3"
                   style={{
-                    backgroundColor: this.state.bgArray[3],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[3]: "",
                     color:
                       this.state.bgArray[3] === "black" ? "green" : "black",
                     textDecoration:
@@ -950,7 +1079,7 @@ class Game extends Component {
                   className="square"
                   data-square="4"
                   style={{
-                    backgroundColor: this.state.bgArray[4],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[4]: "",
                     color:
                       this.state.bgArray[4] === "black" ? "green" : "black",
                     textDecoration:
@@ -967,7 +1096,7 @@ class Game extends Component {
                   className="square"
                   data-square="5"
                   style={{
-                    backgroundColor: this.state.bgArray[5],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[5]: "",
                     color:
                       this.state.bgArray[5] === "black" ? "green" : "black",
                     textDecoration:
@@ -984,7 +1113,7 @@ class Game extends Component {
                   className="square"
                   data-square="6"
                   style={{
-                    backgroundColor: this.state.bgArray[6],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[6]: "",
                     color:
                       this.state.bgArray[6] === "black" ? "green" : "black",
                     textDecoration:
@@ -1001,7 +1130,7 @@ class Game extends Component {
                   className="square"
                   data-square="7"
                   style={{
-                    backgroundColor: this.state.bgArray[7],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[7]: "",
                     color:
                       this.state.bgArray[7] === "black" ? "green" : "black",
                     textDecoration:
@@ -1018,7 +1147,7 @@ class Game extends Component {
                   className="square"
                   data-square="8"
                   style={{
-                    backgroundColor: this.state.bgArray[8],
+                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[8]: "",
                     color:
                       this.state.bgArray[8] === "black" ? "green" : "black",
                     textDecoration:
@@ -1044,7 +1173,10 @@ class Game extends Component {
                           "- Share with a friend"}
                       </div>
                       <div className="card-body">
-                        <h5 className="card-title" onClick={this.copyToClipboard}>
+                        <h5
+                          className="card-title"
+                          onClick={this.copyToClipboard}
+                        >
                           <textarea
                             rows="10"
                             cols="1"
