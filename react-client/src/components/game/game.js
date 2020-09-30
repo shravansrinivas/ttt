@@ -207,7 +207,7 @@ class Game extends Component {
         this.setState({ loading: false });
         return;
       }
-      
+
       let self = this;
       this.getGameData(self.state.gameId);
       if (this.state.gameOver) this.checkGameCompletion();
@@ -280,7 +280,6 @@ class Game extends Component {
     var self = this;
     axios.patch(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
-
       boxes: self.state.boxes,
       gameOver: self.state.gameOver,
       totalMoves: self.state.totalMoves,
@@ -514,10 +513,10 @@ class Game extends Component {
   }
   copyToClipboard = (e) => {
     this.textArea.select();
-    document.execCommand('copy');
-  
+    document.execCommand("copy");
+
     e.target.focus();
-    this.setState({ copySuccess: 'Copied!' });
+    this.setState({ copySuccess: "Copied!" });
   };
   bestCpuMove() {
     let temp = this.state.boxes;
@@ -1035,51 +1034,70 @@ class Game extends Component {
               </div>
             </div>
             <div className="col-12 col-sm-2 col-md-2 col-lg-2  justify-content-center">
-            <div className="row">
-            <div className="col-12" id="side-nav-right">
-              <div className="text-center ">
-                <div class="card text-white bg-primary text-center">
-                  <div class="card-header">
-                    Game ID{" "}
-                    {this.state.gameType === "vsPlayer" &&
-                      "- Share with a friend"}
-                  </div>
-                  <div class="card-body">
-                    <h5  class="card-title" onClick={this.copyToClipboard}><textarea rows="10" cols='1'
-            ref={(textarea) => this.textArea = textarea}
-            value={this.state.gameId}
-          /><div class="text-center clicker"><button onClick={this.copyToClipboard} className="btn btn-sm">Click to copy <img src="https://img.icons8.com/carbon-copy/24/000000/copy.png" alt=""/></button></div></h5>
-                    
-                  </div>
-                </div>
-                <br></br>
-                <div class="card text-white bg-info text-center">
-                  <div class="card-header">Playing As</div>
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      {this.state.player}{" "}
-                      {this.state.gameType === "vsCPU"
-                        ? " against CPU"
-                        : ` against ${this.state.player === "X" ? "O" : "X"}`}
-                    </h5>
-                  </div>
-                </div>
-
-                {this.state.gameType === "vsCPU" && (
-                  <React.Fragment><br></br>
-                    <div class="card text-white bg-danger text-center">
-
-                      <div class="card-header">Difficulty Level</div>
+              <div className="row">
+                <div className="col-12" id="side-nav-right">
+                  <div className="text-center ">
+                    <div class="card text-white bg-primary text-center">
+                      <div class="card-header">
+                        Game ID{" "}
+                        {this.state.gameType === "vsPlayer" &&
+                          "- Share with a friend"}
+                      </div>
                       <div class="card-body">
-                        <h5 class="card-title">
-                          {this.state.gameLevel.toUpperCase()}
+                        <h5 class="card-title" onClick={this.copyToClipboard}>
+                          <textarea
+                            rows="10"
+                            cols="1"
+                            ref={(textarea) => (this.textArea = textarea)}
+                            value={this.state.gameId}
+                          />
+                          <div class="text-center clicker">
+                            <button
+                              onClick={this.copyToClipboard}
+                              className="btn btn-sm"
+                            >
+                              Click to copy{" "}
+                              <img
+                                src="https://img.icons8.com/carbon-copy/24/000000/copy.png"
+                                alt=""
+                              />
+                            </button>
+                          </div>
                         </h5>
                       </div>
                     </div>
-                    </React.Fragment>
-                )}
+                    <br></br>
+                    <div class="card text-white bg-info text-center">
+                      <div class="card-header">Playing As</div>
+                      <div class="card-body">
+                        <h5 class="card-title">
+                          {this.state.player}{" "}
+                          {this.state.gameType === "vsCPU"
+                            ? " against CPU"
+                            : ` against ${
+                                this.state.player === "X" ? "O" : "X"
+                              }`}
+                        </h5>
+                      </div>
+                    </div>
+
+                    {this.state.gameType === "vsCPU" && (
+                      <React.Fragment>
+                        <br></br>
+                        <div class="card text-white bg-danger text-center">
+                          <div class="card-header">Difficulty Level</div>
+                          <div class="card-body">
+                            <h5 class="card-title">
+                              {this.state.gameLevel.toUpperCase()}
+                            </h5>
+                          </div>
+                        </div>
+                      </React.Fragment>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div></div></div>
+            </div>
             {/* <div className="col-12 col-sm-6 col-md-6" id="side-nav-right">
               <div className="text-center ">
                 <div className="side-nav-head">
@@ -1108,7 +1126,6 @@ class Game extends Component {
               </div>
             </div> */}
           </div>
-          
         </React.Fragment>
       );
   }
