@@ -28,7 +28,7 @@ function Header() {
         <nav className="navbar navbar-expand-dark navbar-dark bg-dark">
         <ul className="nav nav-pills nav-fill">
   <li className="nav-item">
-    <a className="navbar-brand" href=""><img src={icon} alt=""></img> React TicTacToe</a>
+    <a className="navbar-brand" href="http://tttreact.herokuapp.com/"><img src={icon} alt=""></img> React TicTacToe</a>
   </li>
   <li className="nav-item">
     <a className="nav-link" href="https://github.com/shravansrinivas/ttt">View Source Code</a>
