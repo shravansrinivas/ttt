@@ -5,7 +5,7 @@ const axios = require("axios");
 const dotenv = require("dotenv").config();
 
 // let URL_BASE= process.env.REACT_APP_BACKEND_URL_BASE;
-let URL_BASE = "/api";
+let URL_BASE = "/api/";
 
 class Game extends Component {
   constructor() {
