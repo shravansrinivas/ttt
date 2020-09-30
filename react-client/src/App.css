@@ -87,9 +87,9 @@ textarea{
 }
 @media all and (max-width: 479px) {
   #turn{
-    margin-top: 2.5% !important;
-    margin-bottom: 2.5% !important;
-    font-size: 25px !important;
+    margin-top: 0% !important;
+    margin-bottom: 0% !important;
+    font-size: 30px !important;
   }
   .header-style {
     background-color: black;

@@ -1,5 +1,6 @@
 import React from "react";
 
+import icon from '../../images/logo.png';
 function Header() {
   return (
     // <header className="header-style">
@@ -24,16 +25,16 @@ function Header() {
     //   </p>
     // </header>
     <header>
-        <nav class="navbar navbar-expand-dark navbar-dark bg-dark">
-        <ul class="nav nav-pills nav-fill">
-  <li class="nav-item">
-    <a class="nav-link" href="">React TicTacToe</a>
+        <nav className="navbar navbar-expand-dark navbar-dark bg-dark">
+        <ul className="nav nav-pills nav-fill">
+  <li className="nav-item">
+    <a className="navbar-brand" href=""><img src={icon} alt=""></img> React TicTacToe</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="https://github.com/shravansrinivas/ttt">View Source Code</a>
+  <li className="nav-item">
+    <a className="nav-link" href="https://github.com/shravansrinivas/ttt">View Source Code</a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="https://github.com/shravansrinivas/ttt#tic-tac-toe-game">View Documentation</a>
+  <li className="nav-item">
+    <a className="nav-link" href="https://github.com/shravansrinivas/ttt#tic-tac-toe-game">View Documentation</a>
   </li>
 
 </ul></nav>

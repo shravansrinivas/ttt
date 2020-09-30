@@ -1037,21 +1037,21 @@ class Game extends Component {
               <div className="row">
                 <div className="col-12" id="side-nav-right">
                   <div className="text-center ">
-                    <div class="card text-white bg-primary text-center">
-                      <div class="card-header">
+                    <div className="card text-white bg-primary text-center">
+                      <div className="card-header">
                         Game ID{" "}
                         {this.state.gameType === "vsPlayer" &&
                           "- Share with a friend"}
                       </div>
-                      <div class="card-body">
-                        <h5 class="card-title" onClick={this.copyToClipboard}>
+                      <div className="card-body">
+                        <h5 className="card-title" onClick={this.copyToClipboard}>
                           <textarea
                             rows="10"
                             cols="1"
                             ref={(textarea) => (this.textArea = textarea)}
                             value={this.state.gameId}
                           />
-                          <div class="text-center clicker">
+                          <div className="text-center clicker">
                             <button
                               onClick={this.copyToClipboard}
                               className="btn btn-sm"
@@ -1067,10 +1067,10 @@ class Game extends Component {
                       </div>
                     </div>
                     <br></br>
-                    <div class="card text-white bg-info text-center">
-                      <div class="card-header">Playing As</div>
-                      <div class="card-body">
-                        <h5 class="card-title">
+                    <div className="card text-white bg-info text-center">
+                      <div className="card-header">Playing As</div>
+                      <div className="card-body">
+                        <h5 className="card-title">
                           {this.state.player}{" "}
                           {this.state.gameType === "vsCPU"
                             ? " against CPU"
@@ -1084,10 +1084,10 @@ class Game extends Component {
                     {this.state.gameType === "vsCPU" && (
                       <React.Fragment>
                         <br></br>
-                        <div class="card text-white bg-danger text-center">
-                          <div class="card-header">Difficulty Level</div>
-                          <div class="card-body">
-                            <h5 class="card-title">
+                        <div className="card text-white bg-danger text-center">
+                          <div className="card-header">Difficulty Level</div>
+                          <div className="card-body">
+                            <h5 className="card-title">
                               {this.state.gameLevel.toUpperCase()}
                             </h5>
                           </div>
