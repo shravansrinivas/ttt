@@ -9,8 +9,7 @@ function App() {
   return (
     
     <div className="App">
-      <meta property="og:title" content="__OG_TITLE__" />
-    <meta property="og:description" content="__OG_DESCRIPTION__" />
+      
       <title>React TTT</title>
 
       

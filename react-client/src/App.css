@@ -4,10 +4,11 @@
   font-size: 55px;
   align-items: center;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  padding: 70px;
-  margin: 0px auto;
+  padding: 75px;
+  /* margin: 0px auto; */
   /* text-align: center; */
 }
+
 a{
   text-decoration: none;
   transform: scale(1);
@@ -60,13 +61,18 @@ text-decoration: none !important;
 
 .game {
   display: flex;
-  width: 450px;
+  width: 90%;
+  justify-content: center;
   flex-wrap: wrap;
   text-align: center;
-  margin: 15% 15%;
+  margin: auto;
+  margin-top: 5%;
+  /* margin: 15% 15%; */
 
 }
-
+*{
+  margin: auto;
+}
 .side-nav-head {
   color: saddlebrown;
   border-top: 1px black solid;
@@ -124,8 +130,8 @@ text-decoration: none !important;
   }
 }
 .square {
-  width: 150px;
-  height: 120px;
+  width: 30%;
+  height: 20vh;
   border: 1px solid black;
   display: flex;
   justify-content: center;

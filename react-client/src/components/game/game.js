@@ -29,7 +29,7 @@ class Game extends Component {
       winner: undefined,
       totalMoves: 0,
       gameStatus: "In Progress",
-      mode: "home",
+      mode: "game",
       loading: true,
       gameType: "-",
       currentTurn: "",
@@ -201,12 +201,13 @@ class Game extends Component {
   };
   joinGame() {
     setTimeout(() => {
+      this.setState({ loading: true });
       if (this.state.gameId.length !== 5) {
         alert("Game ID must be of length 5 characters!");
         this.setState({ loading: false });
         return;
       }
-      this.setState({ loading: true });
+      
       let self = this;
       this.getGameData(self.state.gameId);
       if (this.state.gameOver) this.checkGameCompletion();
@@ -645,7 +646,9 @@ class Game extends Component {
     if (this.state.mode === "home")
       return (
         <div className="container-fluid app-main-content" id="home">
-          {this.state.loading && <div className="loading-cust">Loading&#8230;</div>}
+          {this.state.loading && (
+            <div className="loading-cust">Loading&#8230;</div>
+          )}
           <div className="home-box">
             <div className="jumbotron  bg-primary text-white jumbotron-fluid">
               <div className="container">
@@ -781,12 +784,27 @@ class Game extends Component {
     else
       return (
         <React.Fragment>
+          <div className="row text-center justify-content-center">
+            <div className="col-12 col-sm-12 col-md-12 ">
+              <button
+                className="btn btn-danger"
+                onClick={this.goHome}
+                value="Home"
+              >
+                <img
+                  src="https://img.icons8.com/material-sharp/20/ffffff/home.png"
+                  alt=""
+                />{" "}
+                Home
+              </button>
+            </div>
+          </div>
           <div className="row app-main-content" id="game">
             {this.state.loading && (
               <div className="loading-cust">Loading&#8230;</div>
             )}
-            <div className="col-12 col-sm-3 col-md-3" id="side-nav-left">
-              <div className="text-center ">
+            <div className="col-12 col-sm-2 col-md-2" id="side-nav-left">
+              <div className="justify-content-center">
                 {!this.state.gameOver && (
                   <div id="turn" className="side-nav-body">
                     {this.state.player === this.state.currentTurn
@@ -845,9 +863,9 @@ class Game extends Component {
                 </div>*/}
               </div>
             </div>
-            <div className="col-12 col-sm-6 col-md-6">
+            <div className="col-12 col-sm-8 col-md-8">
               <div
-                className="game"
+                className="game justify-content-center"
                 id="game"
                 onClick={(e) => this.boxClick(e.target)}
               >
@@ -1009,31 +1027,48 @@ class Game extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-sm-3 col-md-3" id="side-nav-right">
+            <div className="col-12 col-sm-2 col-md-2 col-lg-2  justify-content-center">
+            <div className="row">
+            <div className="col-12" id="side-nav-right">
               <div className="text-center ">
-                <div className="side-nav-head">
-                  Game ID{" "}
-                  {this.state.gameType === "vsPlayer" &&
-                    "- Share with a friend"}
-                </div>
-                <div className="side-nav-content">{this.state.gameId}</div>
-                <div className="side-nav-head">Playing As</div>
-                <div className="side-nav-content">
-                  {this.state.player}{" "}
-                  {this.state.gameType === "vsCPU"
-                    ? " against CPU"
-                    : ` against ${this.state.player === "X" ? "O" : "X"}`}
-                </div>
-                {this.state.gameType === "vsCPU" && (
-                  <div>
-                    <div className="side-nav-head">Difficulty Level</div>
-                    <div className="side-nav-content">
-                      {this.state.gameLevel.toUpperCase()}
-                    </div>
+                <div class="card text-white bg-primary text-center">
+                  <div class="card-header">
+                    Game ID{" "}
+                    {this.state.gameType === "vsPlayer" &&
+                      "- Share with a friend"}
                   </div>
+                  <div class="card-body">
+                    <h5 class="card-title">{this.state.gameId}</h5>
+                  </div>
+                </div>
+                <br></br>
+                <div class="card text-white bg-info text-center">
+                  <div class="card-header">Playing As</div>
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      {this.state.player}{" "}
+                      {this.state.gameType === "vsCPU"
+                        ? " against CPU"
+                        : ` against ${this.state.player === "X" ? "O" : "X"}`}
+                    </h5>
+                  </div>
+                </div>
+
+                {this.state.gameType === "vsCPU" && (
+                  <React.Fragment><br></br>
+                    <div class="card text-white bg-danger text-center">
+
+                      <div class="card-header">Difficulty Level</div>
+                      <div class="card-body">
+                        <h5 class="card-title">
+                          {this.state.gameLevel.toUpperCase()}
+                        </h5>
+                      </div>
+                    </div>
+                    </React.Fragment>
                 )}
               </div>
-            </div>
+            </div></div></div>
             {/* <div className="col-12 col-sm-6 col-md-6" id="side-nav-right">
               <div className="text-center ">
                 <div className="side-nav-head">
@@ -1062,21 +1097,7 @@ class Game extends Component {
               </div>
             </div> */}
           </div>
-          <div className="row text-center">
-            <div className="col-12 col-sm-12 col-md-12">
-              <button
-                className="btn btn-danger"
-                onClick={this.goHome}
-                value="Home"
-              >
-                <img
-                  src="https://img.icons8.com/material-sharp/20/ffffff/home.png"
-                  alt=""
-                />{" "}
-                Home
-              </button>
-            </div>
-          </div>
+          
         </React.Fragment>
       );
   }
