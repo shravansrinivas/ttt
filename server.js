@@ -10,7 +10,7 @@ const sampleRoutes = require("./routes/Game");
 
 const app = express();
 
-app.use(express.static('client/build'));
+app.use(express.static('react-client/build'));
 
 //Midleware
 app.use(bodyparser.json());
@@ -21,8 +21,8 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 //Routes
-app.use("/games", sampleRoutes);
-app.get("", (req,res)=>{
+app.use("/api/games", sampleRoutes);
+app.get("/api", (req,res)=>{
   res.send('This is a simple express API for tit-tac-toe match management');
 })
 
