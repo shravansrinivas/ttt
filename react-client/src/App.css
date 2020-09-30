@@ -83,8 +83,21 @@ textarea{
 }
 .clicker{
   font-size: 24px;
+  color: yellow;
 }
+@media all and (max-width: 479px) {
 
+  .header-style {
+    background-color: black;
+    color: cornflowerblue;
+    font-size: 55px;
+    align-items: center;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    padding: 150px !important;
+    /* margin: 0px auto; */
+    /* text-align: center; */
+  }
+  }
 *{
   margin: auto;
 }
