@@ -91,6 +91,37 @@ textarea{
     margin-bottom: 0% !important;
     font-size: 30px !important;
   }
+  @keyframes color-change {
+    0% {
+      color: yellow;
+    }
+    50% {
+      color: blue;
+    }
+    100% {
+      color: yellow;
+    }
+  }
+  #gameOver {
+    animation: color-change-again 1s infinite;
+    margin-top: 0%;
+    margin-bottom: 0%;
+  }
+  @keyframes color-change-again {
+    0% {
+      color: green;
+      transform: scale(1.1);
+    }
+    50% {
+      color: yellow;
+      transform: scale(1);
+    }
+    100% {
+      color: green;
+      transform: scale(1.5);
+    }
+  }
+  
   .header-style {
     background-color: black;
     color: cornflowerblue;
