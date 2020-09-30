@@ -29,7 +29,7 @@ class Game extends Component {
       winner: undefined,
       totalMoves: 0,
       gameStatus: "In Progress",
-      mode: "game",
+      mode: "home",
       loading: true,
       gameType: "-",
       currentTurn: "",
@@ -512,6 +512,13 @@ class Game extends Component {
 
     return 3 * row + col;
   }
+  copyToClipboard = (e) => {
+    this.textArea.select();
+    document.execCommand('copy');
+  
+    e.target.focus();
+    this.setState({ copySuccess: 'Copied!' });
+  };
   bestCpuMove() {
     let temp = this.state.boxes;
     let i = this.find_best_move(temp);
@@ -1038,7 +1045,11 @@ class Game extends Component {
                       "- Share with a friend"}
                   </div>
                   <div class="card-body">
-                    <h5 class="card-title">{this.state.gameId}</h5>
+                    <h5  class="card-title" onClick={this.copyToClipboard}><textarea rows="10" cols='1'
+            ref={(textarea) => this.textArea = textarea}
+            value={this.state.gameId}
+          /><div class="text-center clicker"><button onClick={this.copyToClipboard} className="btn btn-sm">Click to copy <img src="https://img.icons8.com/carbon-copy/24/000000/copy.png" alt=""/></button></div></h5>
+                    
                   </div>
                 </div>
                 <br></br>

@@ -19,7 +19,8 @@
     "install-client": "cd react-client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
     "start": "node server.js",
-    "client": "cd react-client && npm start"
+    "client": "cd react-client && npm start",
+    "dev": "npm run heroku-postbuild && npm run start"
   },
   "repository": {
     "type": "git",
