@@ -43,9 +43,9 @@ class Game extends Component {
       totalMoves: 0,
     };
   }
-   componentDidMount(){
-    this.setState({loading:false});
-   }
+  componentDidMount() {
+    this.setState({ loading: false });
+  }
 
   componentDidUpdate() {
     let self = this;
@@ -79,7 +79,7 @@ class Game extends Component {
         gameType: "vsCPU",
         currentTurn: "X",
         gameLevel: self.state.gameLevel,
-        cpuPlayer: self.state.cpuPlayerInput
+        cpuPlayer: self.state.cpuPlayerInput,
       })
       .then(function (response) {
         console.log(response.data);
@@ -111,7 +111,7 @@ class Game extends Component {
         gameType: "vsPlayer",
         currentTurn: "X",
         gameLevel: "notCPU",
-        cpuPlayer: "notCPUGame"
+        cpuPlayer: "notCPUGame",
       })
       .then(function (response) {
         console.log(response.data);
@@ -161,7 +161,6 @@ class Game extends Component {
             cpuPlaying: response.data[0].gameType === "vsCPU",
           });
           if (response.data[0].gameOver) {
-            
             alert("This game is already over!");
             self.checkGameCompletion();
             if (
@@ -171,10 +170,11 @@ class Game extends Component {
               self.cpuMove();
             }
           }
-        } else alert("Invalid Game ID, Please check again :)");
+        }
       })
       .catch(function (error) {
         console.log(error);
+        alert("Invalid Game ID, Please check again :)");
       });
   }
 
@@ -200,11 +200,10 @@ class Game extends Component {
     console.log(e.target.value);
   };
   joinGame() {
-    
     setTimeout(() => {
       if (this.state.gameId.length !== 5) {
         alert("Game ID must be of length 5 characters!");
-        this.setState({loading:false});
+        this.setState({ loading: false });
         return;
       }
       this.setState({ loading: true });
@@ -212,8 +211,13 @@ class Game extends Component {
       this.getGameData(self.state.gameId);
       if (this.state.gameOver) this.checkGameCompletion();
 
-      if(self.state.joinGameInput!==self.state.player && self.state.gameType==="vsCPU")
-      {alert(`This is a Vs CPU game and You had joined as ${self.state.cpuPlayer} before.\nSo your role will be set to ${self.state.cpuPlayer}. Happy Playing:)`);
+      if (
+        self.state.joinGameInput !== self.state.player &&
+        self.state.gameType === "vsCPU"
+      ) {
+        alert(
+          `This is a Vs CPU game and You had joined as ${self.state.cpuPlayer} before.\nSo your role will be set to ${self.state.cpuPlayer}. Happy Playing:)`
+        );
       }
 
       console.log(this.state.gameId, this.state.joinRole);
@@ -282,11 +286,10 @@ class Game extends Component {
       gameStatus: self.state.gameStatus,
       currentTurn: self.state.currentTurn === "X" ? "O" : "X",
       gameLevel: self.state.gameLevel,
-      cpuPlayer: self.state.cpuPlayer
+      cpuPlayer: self.state.cpuPlayer,
     });
-    
   }
-  cpuMoveDone(){
+  cpuMoveDone() {
     var self = this;
     axios.patch(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
@@ -297,9 +300,11 @@ class Game extends Component {
       gameStatus: self.state.gameStatus,
       currentTurn: self.state.cpuPlayer,
       gameLevel: self.state.gameLevel,
-      cpuPlayer: self.state.cpuPlayer
+      cpuPlayer: self.state.cpuPlayer,
     });
-    if(this.state.cpuPlaying){this.setState({currentTurn:this.state.player})}
+    if (this.state.cpuPlaying) {
+      this.setState({ currentTurn: this.state.player });
+    }
   }
 
   pollTillChance() {
@@ -522,7 +527,6 @@ class Game extends Component {
     this.gameData.boxes = temp;
     this.gameData.totalMoves = this.state.totalMoves;
     console.log("Total moves:", this.state.totalMoves);
-    
   }
 
   randomCpuMove() {
@@ -588,7 +592,7 @@ class Game extends Component {
     }
   }
   resetState() {
-    setTimeout(()=>{
+    setTimeout(() => {
       this.setState({ loading: true });
       this.setState({
         cpuPlayer: "X",
@@ -599,7 +603,7 @@ class Game extends Component {
         // cpuTeam: 'O',
         joinGameInput: "O",
         createGameInput: "X",
-  
+
         player: "",
         gameId: "",
         winner: undefined,
@@ -613,12 +617,13 @@ class Game extends Component {
         gameOver: false,
         boxes: Array(9).fill(""),
         check: true,
-    });
-    this.gameData = {
-      boxes: Array(9).fill(""),
-      totalMoves: 0,
-    };
-    this.setState({ loading: false });},1000);
+      });
+      this.gameData = {
+        boxes: Array(9).fill(""),
+        totalMoves: 0,
+      };
+      this.setState({ loading: false });
+    }, 1000);
   }
   goHome() {
     if (window.confirm("Stop game and go home?")) {
@@ -640,7 +645,7 @@ class Game extends Component {
     if (this.state.mode === "home")
       return (
         <div className="container-fluid app-main-content" id="home">
-          {this.state.loading && <div class="loading-cust">Loading&#8230;</div>}
+          {this.state.loading && <div className="loading-cust">Loading&#8230;</div>}
           <div className="home-box">
             <div className="jumbotron  bg-primary text-white jumbotron-fluid">
               <div className="container">
@@ -778,7 +783,7 @@ class Game extends Component {
         <React.Fragment>
           <div className="row app-main-content" id="game">
             {this.state.loading && (
-              <div class="loading-cust">Loading&#8230;</div>
+              <div className="loading-cust">Loading&#8230;</div>
             )}
             <div className="col-12 col-sm-3 col-md-3" id="side-nav-left">
               <div className="text-center ">
