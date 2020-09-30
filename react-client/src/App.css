@@ -86,14 +86,18 @@ textarea{
   color: yellow;
 }
 @media all and (max-width: 479px) {
-
+  #turn{
+    margin-top: 5% !important;
+    margin-bottom: 5% !important;
+    font-size: 20px !important;
+  }
   .header-style {
     background-color: black;
     color: cornflowerblue;
-    font-size: 55px;
+    font-size: 30px !important;
     align-items: center;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    padding: 150px !important;
+    padding: 100px !important;
     /* margin: 0px auto; */
     /* text-align: center; */
   }
