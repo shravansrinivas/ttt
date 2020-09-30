@@ -30,7 +30,7 @@ class Game extends Component {
       totalMoves: 0,
       gameStatus: "In Progress",
       mode: "home",
-      loading: false,
+      loading: true,
       gameType: "-",
       currentTurn: "",
       // joiningPlayer: "O",
@@ -43,9 +43,9 @@ class Game extends Component {
       totalMoves: 0,
     };
   }
-  // componentDidMount(){
-  //   console.log(process.env.REACT_APP_BACKEND_URL_BASE)
-  // }
+   componentDidMount(){
+    this.setState({loading:false});
+   }
 
   componentDidUpdate() {
     let self = this;
@@ -203,6 +203,7 @@ class Game extends Component {
     setTimeout(() => {
       if (this.state.gameId.length !== 5) {
         alert("Game ID must be of length 5 characters!");
+        this.setState({loading:false});
         return;
       }
       let self = this;
