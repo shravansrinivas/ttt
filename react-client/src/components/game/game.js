@@ -425,7 +425,7 @@ class Game extends Component {
           boxes: this.gameData.boxes,
           //currentTurn: this.state.currentTurn === "X" ? "O" : "X",
         });
-        this.gameData.totalMoves += 1;
+        this.gameData.totalMoves = this.gameData.totalMoves +  1;
         console.log(this.gameData.totalMoves);
         this.setState({ totalMoves: this.gameData.totalMoves });
 
