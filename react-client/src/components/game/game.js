@@ -340,7 +340,7 @@ class Game extends Component {
   updateAfterClick() {
     var self = this;
     console.log(this.state);
-    axios.patch(URL_BASE + "games/" + self.state.gameId, {
+    axios.put(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
       boxes: self.state.boxes,
       gameOver: self.state.gameOver,
@@ -355,7 +355,7 @@ class Game extends Component {
   }
   cpuMoveDone() {
     var self = this;
-    axios.patch(URL_BASE + "games/" + self.state.gameId, {
+    axios.put(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
 
       boxes: self.state.boxes,
