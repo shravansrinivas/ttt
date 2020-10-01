@@ -412,7 +412,7 @@ class Game extends Component {
   }
 
   boxClick(square) {
-    //setTimeout(() => {
+    setTimeout(() => {
       if (this.state.gameOver) {
         alert("Game is already over! Start a new one :)");
         return;
@@ -431,28 +431,26 @@ class Game extends Component {
           boxes: this.gameData.boxes,
           //currentTurn: this.state.currentTurn === "X" ? "O" : "X",
         });
-        this.gameData.totalMoves = this.gameData.totalMoves +  1;
+        this.gameData.totalMoves += 1;
         console.log(this.gameData.totalMoves);
         this.setState({ totalMoves: this.gameData.totalMoves });
 
-        // if (this.colorBlack()) {
-        //   // alert(this.state.gameStatus);
-        //   this.updateWin();
-        // }
-        // this.checkGameCompletion();
-        setTimeout(()=>{this.updateAfterClick();},300);
+        if (this.checkGameCompletion()) {
+          // alert(this.state.gameStatus);
+        }
+
+        this.updateAfterClick();
         this.setState({
           //boxes: this.gameData.boxes,
           currentTurn: this.state.currentTurn === "X" ? "O" : "X",
         });
-       this.checkGameCompletion();
+        this.checkGameCompletion();
         if (this.state.gameType === "vsCPU" && this.state.gameOver === false)
-          // setTimeout(() => {
+          setTimeout(() => {
             this.cpuMove();
-          // }, 500);
+          }, 200);
       }
-    //}, 500);
-  }
+    }, 500);  }
   updateWin() {
     let self = this;
     self.setState({
