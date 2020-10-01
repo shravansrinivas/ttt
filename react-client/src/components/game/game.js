@@ -461,7 +461,12 @@ class Game extends Component {
       oWins:
         this.state.winner === "O" ? this.state.oWins + 1 : this.state.oWins,
     });
+    console.log('yes baby')
+    console.log(self.state)
     setTimeout(() => {
+      console.log('Win updating');
+      console.log(self.state)
+
       self.updateAfterClick();
     }, 500);
   }
