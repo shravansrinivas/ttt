@@ -77,7 +77,6 @@ class Game extends Component {
 
   playVsCPU() {
     this.setState({ loading: true });
-
     var self = this;
     self.setState({ cpuPlaying: true, player: self.state.cpuPlayerInput });
     axios
@@ -398,16 +397,14 @@ class Game extends Component {
             oWins: res.oWins,
           });
           self.gameData.boxes = res.boxes;
-        }).then(
-          ()=>{if (self.state.gameOver) {
-            self.colorBlack();
-            //this.setState({ check: false });
-          }}
-        )
+        })
         .catch(function (error) {
           console.log(error);
         });
-     
+        if (self.state.gameOver) {
+          self.colorBlack();
+          //this.setState({ check: false });
+        }
     }, 1000);
   }
 
