@@ -1002,7 +1002,7 @@ class Game extends Component {
                     Home
                   </button>{" "}
                   {"\t\t"}
-                  {this.state.creator===this.state.player (
+                  {this.state.creator===this.state.player && (
                       <button
                         className="btn btn-danger"
                         onClick={this.restartMatch}
