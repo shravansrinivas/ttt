@@ -55,6 +55,11 @@ const SampleSchema=mongoose.Schema({
     creator:{
         type: String,
         required: true
+    },
+    trigger:{
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 

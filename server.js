@@ -10,9 +10,9 @@ const sampleRoutes = require("./routes/Game");
 const app = express();
 
 //React APP
-//if (process.env.scope == "PROD") {
+// if (process.env.scope == "PROD") {
 app.use(express.static("react-client/build"));
-//}
+// }
 
 //Midleware
 app.use(bodyparser.json());
