@@ -495,7 +495,7 @@ class Game extends Component {
     if (this.state.player === "O" && this.state.cpuPlaying) {
       this.cpuMove();
       //alert('moving now')
-    }},300);
+    }},1000);
 
     //if(this.state.cpuPlaying && this.state.cpuPlayer!==this.state.currentTurn)this.cpuMove();
   }
