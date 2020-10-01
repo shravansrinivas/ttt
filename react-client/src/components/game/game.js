@@ -4,18 +4,18 @@ const axios = require("axios");
 // eslint-disable-next-line
 const dotenv = require("dotenv").config();
 
-var URL_BASE = undefined;
-URL_BASE = process.env.REACT_APP_BACKEND_URL_BASE;
-if (process.env.scope == "PROD") {
-  console.log("Using PROD");
-  URL_BASE = "/api/";
-} else {
-  console.log("Using DEV");
-  let PORT = 3005;
+// var URL_BASE = undefined;
+// URL_BASE = process.env.REACT_APP_BACKEND_URL_BASE;
+// if (process.env.scope == "PROD") {
+//   console.log("Using PROD");
+//   URL_BASE = "/api/";
+// } else {
+//   console.log("Using DEV");
+//   let PORT = 3005;
 
-  URL_BASE = `http://localhost:${PORT}/api/`;
-}
-// let URL_BASE = "/api/";
+//   URL_BASE = `http://localhost:${PORT}/api/`;
+// }
+let URL_BASE = "/api/";
 
 class Game extends Component {
   constructor() {
