@@ -439,13 +439,13 @@ class Game extends Component {
         //   // alert(this.state.gameStatus);
         //   this.updateWin();
         // }
-
+        this.checkGameCompletion();
         setTimeout(()=>{this.updateAfterClick();},300);
         this.setState({
           //boxes: this.gameData.boxes,
           currentTurn: this.state.currentTurn === "X" ? "O" : "X",
         });
-        this.checkGameCompletion();
+       
         if (this.state.gameType === "vsCPU" && this.state.gameOver === false)
           // setTimeout(() => {
             this.cpuMove();
