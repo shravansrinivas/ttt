@@ -10,6 +10,7 @@ const sampleRoutes = require("./routes/Game");
 
 const app = express();
 
+//React APP
 app.use(express.static('react-client/build'));
 
 //Midleware

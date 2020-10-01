@@ -31,7 +31,9 @@ router.post("", async (req, res) => {
     gameOver: false,
     totalMoves: 0,
     gameLevel: req.body.gameLevel,
-    cpuPlayer: req.body.cpuPlayer
+    cpuPlayer: req.body.cpuPlayer,
+    xWins: 0,
+    oWins: 0
   });
 
   let game = await gameToPost
@@ -46,7 +48,7 @@ router.post("", async (req, res) => {
 
 
 //PATCH game data by ID after move
-router.patch("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const updateGameData = await Game.updateOne(
     { gameId: req.params.id },
     {
@@ -57,14 +59,19 @@ router.patch("/:id", async (req, res) => {
       gameOver: req.body.gameOver,
       totalMoves: req.body.totalMoves,
       gameLevel: req.body.gameLevel,
-      cpuPlayer: req.body.cpuPlayer
+      cpuPlayer: req.body.cpuPlayer,
+      xWins: req.body.xWins,
+      oWins: req.body.oWins
     }
   )
     .then((data) => {
-      res.json(data);
+      //res.json(data);
+      console.log(data);
+      res.send('Update Done')
     })
     .catch((err) => {
       res.json({ errorMessage: err });
     });
 });
+
 module.exports = router;

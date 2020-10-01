@@ -4,9 +4,9 @@
   "description": "Tictactoe game app built using react.js and expressjs :) ",
   "main": "index.js",
   "dependencies": {
-    "concurrently": "^5.3.0",
     "body-parser": "1.19.0",
-    "cors": "2.8.5",
+    "concurrently": "^5.3.0",
+    "cors": "^2.8.5",
     "dotenv": "8.2.0",
     "express": "4.17.1",
     "mongoose": "5.10.5",
@@ -15,7 +15,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build":"cd react-client && npm run build",
+    "build": "cd react-client && npm run build",
     "install-client": "cd react-client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
     "start": "node server.js",
@@ -38,5 +38,4 @@
     "url": "https://github.com/shravansrinivas/ttt/issues"
   },
   "homepage": "https://github.com/shravansrinivas/ttt#readme"
-  
 }
