@@ -1002,8 +1002,7 @@ class Game extends Component {
                     Home
                   </button>{" "}
                   {"\t\t"}
-                  {this.state.totalMoves !== 0 &&
-                    this.state.currentTurn == this.state.player && (
+                  {this.state.creator===this.state.player (
                       <button
                         className="btn btn-danger"
                         onClick={this.restartMatch}
@@ -1029,7 +1028,7 @@ class Game extends Component {
                       : this.state.winner !== "draw"
                       ? " and you lost:( "
                       : " and match drawn "}{" "}
-                    <button
+                   {this.state.player===this.state.creator ? (<button
                       className="btn btn-danger"
                       onClick={this.restartMatch}
                       value="Home"
@@ -1039,7 +1038,7 @@ class Game extends Component {
                         alt=""
                       />{" "}
                       Restart
-                    </button>{" "}
+                    </button>): "Ask the game creator to restart"} {" "}
                     to keep playing :)
                   </div>
                 )}
