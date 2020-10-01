@@ -31,11 +31,9 @@ function Header() {
     <a className="navbar-brand" href="https://ttt-replica.herokuapp.com/"><img src={icon} alt=""></img> React TicTacToe</a>
   </li>
   <li className="nav-item">
-    <a className="nav-link" href="https://github.com/shravansrinivas/ttt/tree/replica">View Source Code</a>
+    <a className="nav-link" href="https://github.com/shravansrinivas/ttt">View Source Code</a>
   </li>
-  <li className="nav-item">
-    <a className="nav-link" href="https://github.com/shravansrinivas/ttt/tree/replica#tic-tac-toe-game">View Documentation</a>
-  </li>
+  
 
 </ul></nav>
     </header>
