@@ -114,6 +114,7 @@ class Game extends Component {
         currentTurn: "X",
         gameLevel: "notCPU",
         cpuPlayer: "notCPUGame",
+        
       })
       .then(function (response) {
         console.log(response.data);
