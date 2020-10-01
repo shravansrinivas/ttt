@@ -967,7 +967,7 @@ class Game extends Component {
                       </div>
 
                       <div className="col-6 col-sm-12 col-md-12 col-lg-12">
-                        <br></br>
+                        
                         <div className="card text-white bg-danger text-center">
                           <div className="card-header">O - Score</div>
                           <div className="card-body">
