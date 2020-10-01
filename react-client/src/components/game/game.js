@@ -159,7 +159,7 @@ class Game extends Component {
 
             gameOver: response.data[0].gameOver,
             gameType: response.data[0].gameType,
-            currentTurn: response.data[0].totalMoves%2===0?'X':'O',
+            currentTurn: response.data[0].totalMoves % 2 === 0 ? "X" : "O",
             cpuPlayer: response.data[0].cpuPlayer,
             mode: "game",
             totalMoves: response.data[0].totalMoves,
@@ -168,12 +168,12 @@ class Game extends Component {
           if (response.data[0].gameOver) {
             //alert("This game is already over!");
             self.colorBlack();
-            if (
-              self.state.gameType === "vsCPU" &&
-              self.state.currentTurn !== self.state.player
-            ) {
-              self.cpuMove();
-            }
+            // if (
+            //   self.state.gameType === "vsCPU" &&
+            //   self.state.currentTurn !== self.state.player
+            // ) {
+            //   self.cpuMove();
+            // }
           }
         }
       })
@@ -230,7 +230,7 @@ class Game extends Component {
       self.setState({ loading: false });
     }, 300);
   }
-  colorBlack(){
+  colorBlack() {
     var winningCombo = [
       [0, 3, 6],
       [1, 4, 7],
@@ -256,7 +256,7 @@ class Game extends Component {
         winningCombo[i].forEach((x) => {
           temp[x] = "black";
         });
-        
+
         this.setState({
           bgArray: temp,
           winner: currentState[winningCombo[i][0]],
@@ -264,13 +264,23 @@ class Game extends Component {
           gameStatus:
             "GameOver-Match Won by " + currentState[winningCombo[i][0]],
         });
-        
+
         break;
         //}
       }
     }
-    if(this.state.gameOver) return true;
-    else return false;
+    if (this.gameData.totalMoves === 9) {
+      let temp = Array(9).fill("");
+      this.setState({
+        bgArray: temp,
+        winner: "draw",
+        gameOver: true,
+        gameStatus: "GameOver-Match Drawn!",
+      });
+    }
+    if (this.state.gameOver) {
+      return true;
+    } else return false;
   }
   checkGameCompletion() {
     var winningCombo = [
@@ -298,7 +308,7 @@ class Game extends Component {
         winningCombo[i].forEach((x) => {
           temp[x] = "black";
         });
-        
+
         this.setState({
           bgArray: temp,
           winner: currentState[winningCombo[i][0]],
@@ -306,7 +316,7 @@ class Game extends Component {
           gameStatus:
             "GameOver-Match Won by " + currentState[winningCombo[i][0]],
         });
-        
+
         break;
         //}
       }
@@ -320,20 +330,22 @@ class Game extends Component {
         gameStatus: "GameOver-Match Drawn!",
       });
     }
-    if (this.state.gameOver) {this.updateWin();return true;}
-    else return false;
+    if (this.state.gameOver) {
+      this.updateWin();
+      return true;
+    } else return false;
   }
 
   updateAfterClick() {
     var self = this;
-    console.log(this.state)
+    console.log(this.state);
     axios.patch(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
       boxes: self.state.boxes,
       gameOver: self.state.gameOver,
       totalMoves: self.state.totalMoves,
       gameStatus: self.state.gameStatus,
-      currentTurn: self.state.totalMoves%2 === 0 ? "X" : "O",
+      currentTurn: self.state.totalMoves % 2 === 0 ? "X" : "O",
       gameLevel: self.state.gameLevel,
       cpuPlayer: self.state.cpuPlayer,
       xWins: self.state.xWins,
@@ -371,7 +383,7 @@ class Game extends Component {
           self.gameData.boxes = res.boxes;
           self.gameData.totalMoves = res.totalMoves;
           self.setState({
-            currentTurn: res.totalMoves%2===0?'X':'O',
+            currentTurn: res.totalMoves % 2 === 0 ? "X" : "O",
             winner: res.winner,
             gameStatus: res.gameStatus,
             gameOver: res.gameOver,
@@ -381,7 +393,6 @@ class Game extends Component {
             oWins: res.oWins,
           });
           self.gameData.boxes = res.boxes;
-          
         })
         .catch(function (error) {
           console.log(error);
@@ -438,16 +449,20 @@ class Game extends Component {
   updateWin() {
     let self = this;
     self.setState({
-      xWins: this.state.winner === "X" ? this.state.xWins + 1 : this.state.xWins,
-      oWins: this.state.winner === "O" ? this.state.oWins + 1 : this.state.oWins,
+      xWins:
+        this.state.winner === "X" ? this.state.xWins + 1 : this.state.xWins,
+      oWins:
+        this.state.winner === "O" ? this.state.oWins + 1 : this.state.oWins,
     });
-    setTimeout(()=>{self.updateAfterClick();},500)
+    setTimeout(() => {
+      self.updateAfterClick();
+    }, 500);
   }
   restartMatch() {
     let self = this;
     self.setState({ loading: true });
     self.setState({
-      cpuPlayer: "X",
+      // cpuPlayer: "X",
       //gameLevel: "hard",
       bgArray: Array(9).fill(""),
       //cpuPlayerInput: "X",
@@ -474,8 +489,15 @@ class Game extends Component {
       boxes: Array(9).fill(""),
       totalMoves: 0,
     };
-    setTimeout(()=>{this.updateAfterClick();},500);
+
+    setTimeout(()=>{this.updateAfterClick();
     self.setState({ loading: false });
+    if (this.state.player === "O" && this.state.cpuPlaying) {
+      this.cpuMove();
+      //alert('moving now')
+    }},300);
+
+    //if(this.state.cpuPlaying && this.state.cpuPlayer!==this.state.currentTurn)this.cpuMove();
   }
   hasMovesLeft(mat) {
     // If it has an empty space, keep playing
@@ -919,7 +941,9 @@ class Game extends Component {
                                 : "You"}{" "}
                               {")"}
                             </h5>
-                            {this.state.player!=this.state.currentTurn && (<p>Waiting for opponent's move!</p>)}
+                            {this.state.player != this.state.currentTurn && (
+                              <p>Waiting for opponent's move!</p>
+                            )}
                           </div>
                         </React.Fragment>
                       )}
@@ -934,9 +958,9 @@ class Game extends Component {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="col-6 col-sm-12 col-md-12 col-lg-12">
-                      <br></br>
+                        <br></br>
                         <div className="card text-white bg-danger text-center">
                           <div className="card-header">O - Score</div>
                           <div className="card-body">
@@ -964,7 +988,31 @@ class Game extends Component {
                     Home
                   </button>{" "}
                   {"\t\t"}
-                  {this.state.totalMoves !== 0 && (
+                  {this.state.totalMoves !== 0 &&
+                    this.state.currentTurn == this.state.player && (
+                      <button
+                        className="btn btn-danger"
+                        onClick={this.restartMatch}
+                        value="Home"
+                      >
+                        <img
+                          src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
+                          alt=""
+                        />{" "}
+                        Restart
+                      </button>
+                    )}
+                </div>
+              </div>
+              {this.state.gameOver &&
+                (this.state.cpuPlayer
+                  ? true
+                  : this.state.currentTurn == this.state.player) && (
+                  <div class="alert alert-info alert-dismissible" role="alert">
+                    Game Over{" "}
+                    {this.state.player === this.state.winner
+                      ? " and you won:) Hurray!"
+                      : " and you lost:( "}{" "}
                     <button
                       className="btn btn-danger"
                       onClick={this.restartMatch}
@@ -975,30 +1023,10 @@ class Game extends Component {
                         alt=""
                       />{" "}
                       Restart
-                    </button>
-                  )}
-                </div>
-              </div>
-              {this.state.gameOver && (
-                <div class="alert alert-info alert-dismissible" role="alert">
-                  Game Over{" "}
-                  {this.state.player === this.state.winner
-                    ? " and you won:) Hurray!"
-                    : " and you lost:( "}{" "}
-                  <button
-                    className="btn btn-danger"
-                    onClick={this.restartMatch}
-                    value="Home"
-                  >
-                    <img
-                      src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
-                      alt=""
-                    />{" "}
-                    Restart
-                  </button>{" "}
-                  to keep playing :)
-                </div>
-              )}
+                    </button>{" "}
+                    to keep playing :)
+                  </div>
+                )}
               <div
                 className="game justify-content-center"
                 id="game"
@@ -1011,7 +1039,8 @@ class Game extends Component {
                   className="square"
                   data-square="0"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[0]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[0] : "",
                     color:
                       this.state.bgArray[0] === "black" ? "green" : "black",
                     textDecoration:
@@ -1028,7 +1057,8 @@ class Game extends Component {
                   className="square"
                   data-square="1"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[1]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[1] : "",
                     color:
                       this.state.bgArray[1] === "black" ? "green" : "black",
                     textDecoration:
@@ -1045,7 +1075,8 @@ class Game extends Component {
                   className="square"
                   data-square="2"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[2]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[2] : "",
                     color:
                       this.state.bgArray[2] === "black" ? "green" : "black",
                     textDecoration:
@@ -1062,7 +1093,8 @@ class Game extends Component {
                   className="square"
                   data-square="3"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[3]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[3] : "",
                     color:
                       this.state.bgArray[3] === "black" ? "green" : "black",
                     textDecoration:
@@ -1079,7 +1111,8 @@ class Game extends Component {
                   className="square"
                   data-square="4"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[4]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[4] : "",
                     color:
                       this.state.bgArray[4] === "black" ? "green" : "black",
                     textDecoration:
@@ -1096,7 +1129,8 @@ class Game extends Component {
                   className="square"
                   data-square="5"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[5]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[5] : "",
                     color:
                       this.state.bgArray[5] === "black" ? "green" : "black",
                     textDecoration:
@@ -1113,7 +1147,8 @@ class Game extends Component {
                   className="square"
                   data-square="6"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[6]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[6] : "",
                     color:
                       this.state.bgArray[6] === "black" ? "green" : "black",
                     textDecoration:
@@ -1130,7 +1165,8 @@ class Game extends Component {
                   className="square"
                   data-square="7"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[7]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[7] : "",
                     color:
                       this.state.bgArray[7] === "black" ? "green" : "black",
                     textDecoration:
@@ -1147,7 +1183,8 @@ class Game extends Component {
                   className="square"
                   data-square="8"
                   style={{
-                    backgroundColor: this.state.totalMoves!==0?this.state.bgArray[8]: "",
+                    backgroundColor:
+                      this.state.totalMoves !== 0 ? this.state.bgArray[8] : "",
                     color:
                       this.state.bgArray[8] === "black" ? "green" : "black",
                     textDecoration:
