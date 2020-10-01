@@ -406,7 +406,7 @@ class Game extends Component {
   }
 
   boxClick(square) {
-    setTimeout(() => {
+    //setTimeout(() => {
       if (this.state.gameOver) {
         alert("Game is already over! Start a new one :)");
         return;
@@ -441,11 +441,11 @@ class Game extends Component {
         });
         this.checkGameCompletion();
         if (this.state.gameType === "vsCPU" && this.state.gameOver === false)
-          setTimeout(() => {
+          // setTimeout(() => {
             this.cpuMove();
-          }, 200);
+          // }, 500);
       }
-    }, 500);
+    //}, 500);
   }
   updateWin() {
     let self = this;
