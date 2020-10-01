@@ -51,6 +51,10 @@ const SampleSchema=mongoose.Schema({
         type: Number,
         default: 0,
         required: true
+    },
+    creator:{
+        type: String,
+        required: true
     }
 });
 

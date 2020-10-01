@@ -85,6 +85,7 @@ class Game extends Component {
         currentTurn: "X",
         gameLevel: self.state.gameLevel,
         cpuPlayer: self.state.cpuPlayerInput,
+        creator: self.state.cpuPlayerInput,
       })
       .then(function (response) {
         console.log(response.data);
@@ -118,7 +119,7 @@ class Game extends Component {
         currentTurn: "X",
         gameLevel: "notCPU",
         cpuPlayer: "notCPUGame",
-        
+        creator: self.state.createGameInput,
       })
       .then(function (response) {
         console.log(response.data);
@@ -153,6 +154,7 @@ class Game extends Component {
             gameLevel: response.data[0].gameLevel,
             gameId: response.data[0].gameId,
             boxes: response.data[0].boxes,
+            creator: response.data[0].creator,
             player:
               response.data[0].gameType === "vsCPU"
                 ? response.data[0].cpuPlayer
@@ -355,6 +357,7 @@ class Game extends Component {
       cpuPlayer: self.state.cpuPlayer,
       xWins: self.state.xWins,
       oWins: self.state.oWins,
+      creator: self.state.creator,
     });
   }
   cpuMoveDone() {
@@ -370,6 +373,7 @@ class Game extends Component {
       cpuPlayer: self.state.cpuPlayer,
       xWins: self.state.xWins,
       oWins: self.state.oWins,
+      creator: self.state.creator,
     });
     if (this.state.cpuPlaying) {
       this.setState({ currentTurn: this.state.cpuPlayer });
@@ -395,16 +399,17 @@ class Game extends Component {
             totalMoves: res.totalMoves,
             xWins: res.xWins,
             oWins: res.oWins,
+            creator: res.creator,
           });
           self.gameData.boxes = res.boxes;
         })
         .catch(function (error) {
           console.log(error);
         });
-        if (self.state.gameOver) {
-          self.colorBlack();
-          //this.setState({ check: false });
-        }
+      if (self.state.gameOver) {
+        self.colorBlack();
+        //this.setState({ check: false });
+      }
     }, 1000);
   }
 
@@ -447,7 +452,8 @@ class Game extends Component {
             this.cpuMove();
           }, 200);
       }
-    }, 500);  }
+    }, 500);
+  }
   updateWin() {
     let self = this;
     self.setState({
@@ -456,11 +462,11 @@ class Game extends Component {
       oWins:
         this.state.winner === "O" ? this.state.oWins + 1 : this.state.oWins,
     });
-    console.log('yes baby')
-    console.log(self.state)
+    console.log("yes baby");
+    console.log(self.state);
     setTimeout(() => {
-      console.log('Win updating');
-      console.log(self.state)
+      console.log("Win updating");
+      console.log(self.state);
 
       self.updateAfterClick();
     }, 500);
@@ -497,12 +503,14 @@ class Game extends Component {
       totalMoves: 0,
     };
 
-    setTimeout(()=>{this.updateAfterClick();
-    self.setState({ loading: false });
-    if (this.state.player === "O" && this.state.cpuPlaying) {
-      this.cpuMove();
-      //alert('moving now')
-    }},1000);
+    setTimeout(() => {
+      this.updateAfterClick();
+      self.setState({ loading: false });
+      if (this.state.player === "O" && this.state.cpuPlaying) {
+        this.cpuMove();
+        //alert('moving now')
+      }
+    }, 1000);
 
     //if(this.state.cpuPlaying && this.state.cpuPlayer!==this.state.currentTurn)this.cpuMove();
   }
@@ -967,7 +975,6 @@ class Game extends Component {
                       </div>
 
                       <div className="col-6 col-sm-12 col-md-12 col-lg-12">
-                        
                         <div className="card text-white bg-danger text-center">
                           <div className="card-header">O - Score</div>
                           <div className="card-body">
@@ -1019,7 +1026,9 @@ class Game extends Component {
                     Game Over{" "}
                     {this.state.player === this.state.winner
                       ? " and you won:) Hurray!"
-                      : " and you lost:( "}{" "}
+                      : this.state.winner !== "draw"
+                      ? " and you lost:( "
+                      : " and match drawn "}{" "}
                     <button
                       className="btn btn-danger"
                       onClick={this.restartMatch}

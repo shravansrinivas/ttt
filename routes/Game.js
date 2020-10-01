@@ -33,7 +33,8 @@ router.post("", async (req, res) => {
     gameLevel: req.body.gameLevel,
     cpuPlayer: req.body.cpuPlayer,
     xWins: 0,
-    oWins: 0
+    oWins: 0,
+    creator: req.body.creator,
   });
 
   let game = await gameToPost
@@ -45,7 +46,6 @@ router.post("", async (req, res) => {
       res.send({ errorMessage: err });
     });
 });
-
 
 //PATCH game data by ID after move
 router.put("/:id", async (req, res) => {
@@ -61,13 +61,14 @@ router.put("/:id", async (req, res) => {
       gameLevel: req.body.gameLevel,
       cpuPlayer: req.body.cpuPlayer,
       xWins: req.body.xWins,
-      oWins: req.body.oWins
+      oWins: req.body.oWins,
+      creator: req.body.creator,
     }
   )
     .then((data) => {
       //res.json(data);
       console.log(data);
-      res.send('Update Done')
+      res.send("Update Done");
     })
     .catch((err) => {
       res.json({ errorMessage: err });
