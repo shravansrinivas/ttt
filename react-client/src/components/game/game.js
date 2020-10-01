@@ -434,7 +434,7 @@ class Game extends Component {
         //   this.updateWin();
         // }
 
-        this.updateAfterClick();
+        setTimeout(()=>{this.updateAfterClick();},300);
         this.setState({
           //boxes: this.gameData.boxes,
           currentTurn: this.state.currentTurn === "X" ? "O" : "X",
