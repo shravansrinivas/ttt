@@ -31,7 +31,11 @@ router.post("", async (req, res) => {
     gameOver: false,
     totalMoves: 0,
     gameLevel: req.body.gameLevel,
-    cpuPlayer: req.body.cpuPlayer
+    cpuPlayer: req.body.cpuPlayer,
+    xWins: 0,
+    oWins: 0,
+    trigger: false,
+    creator: req.body.creator,
   });
 
   let game = await gameToPost
@@ -44,9 +48,43 @@ router.post("", async (req, res) => {
     });
 });
 
+// Set restart trigger
+router.put("/setTrigger/:id", async (req, res) => {
+  const updateGameData = await Game.updateOne(
+    { gameId: req.params.id },
+    {
+      trigger: true,
+    }
+  )
+    .then((data) => {
+      //res.json(data);
+      console.log(data);
+      res.send("Triggered successfully");
+    })
+    .catch((err) => {
+      res.json({ errorMessage: err });
+    });
+});
+// Set restart trigger
+router.put("/resetTrigger/:id", async (req, res) => {
+  const updateGameData = await Game.updateOne(
+    { gameId: req.params.id },
+    {
+      trigger: false,
+    }
+  )
+    .then((data) => {
+      //res.json(data);
+      console.log(data);
+      res.send("Trigger reset successful");
+    })
+    .catch((err) => {
+      res.json({ errorMessage: err });
+    });
+});
 
 //PATCH game data by ID after move
-router.patch("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const updateGameData = await Game.updateOne(
     { gameId: req.params.id },
     {
@@ -57,14 +95,20 @@ router.patch("/:id", async (req, res) => {
       gameOver: req.body.gameOver,
       totalMoves: req.body.totalMoves,
       gameLevel: req.body.gameLevel,
-      cpuPlayer: req.body.cpuPlayer
+      cpuPlayer: req.body.cpuPlayer,
+      xWins: req.body.xWins,
+      oWins: req.body.oWins,
+      creator: req.body.creator,
     }
   )
     .then((data) => {
-      res.json(data);
+      //res.json(data);
+      console.log(data);
+      res.send("Update Done");
     })
     .catch((err) => {
       res.json({ errorMessage: err });
     });
 });
+
 module.exports = router;

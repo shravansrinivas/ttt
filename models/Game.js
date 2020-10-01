@@ -41,6 +41,25 @@ const SampleSchema=mongoose.Schema({
         type: Number,
         default: 0,
         required: true
+    },
+    xWins:{
+        type: Number,
+        default: 0,
+        required: true
+    },
+    oWins:{
+        type: Number,
+        default: 0,
+        required: true
+    },
+    creator:{
+        type: String,
+        required: true
+    },
+    trigger:{
+        type: Boolean,
+        required: true,
+        default: false
     }
 });
 
