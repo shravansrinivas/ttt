@@ -3,6 +3,7 @@ import "./components/header/header";
 import "./App.css";
 import Header from "./components/header/header";
 import Footer from "./components/footer/footer";
+import 'bootstrap/dist/css/bootstrap.css';
 // import Home from "./components/home/home";
 import Game from "./components/game/game";
 function App() {
