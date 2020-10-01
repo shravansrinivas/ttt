@@ -4,8 +4,17 @@ const axios = require("axios");
 // eslint-disable-next-line
 const dotenv = require("dotenv").config();
 
+var URL_BASE=undefined;
 // let URL_BASE= process.env.REACT_APP_BACKEND_URL_BASE;
-let URL_BASE = "/api/";
+if (process.env.scope == "PROD") {
+  console.log("Using PROD");
+   URL_BASE = "/api/";
+} else  {
+  console.log("Using DEV");
+  let PORT= 3005;
+
+   URL_BASE = `http://localhost:${PORT}/api/`;
+}
 
 class Game extends Component {
   constructor() {
@@ -39,19 +48,21 @@ class Game extends Component {
       gameOver: false,
       boxes: Array(9).fill(""),
       check: true,
+      copySuccess:''
     };
+    
     this.gameData = {
       boxes: Array(9).fill(""),
       totalMoves: 0,
     };
   }
   componentDidMount() {
-    this.setState({ loading: false });
+    this.setState({loading: false });
   }
 
   componentDidUpdate() {
     let self = this;
-    //if(this.state.gameOver){this.colorBlack(); this.setState({check:false})}
+    //if(this.state.gameOver){this.colorBlack(); this.setState({creator:this.state.creator,check:false})}
     if (
       self.state.mode === "game" &&
       self.state.currentTurn !== self.state.player &&
@@ -61,7 +72,7 @@ class Game extends Component {
       setInterval(this.pollTillChance(), 500);
       // if (self.state.gameOver) {
       //   self.colorBlack();
-      //   //this.setState({ check: false });
+      //   //this.setState({creator:this.state.creator, check: false });
       // }
     }
     //  else if (
@@ -78,7 +89,7 @@ class Game extends Component {
   playVsCPU() {
     this.setState({ loading: true });
     var self = this;
-    self.setState({ cpuPlaying: true, player: self.state.cpuPlayerInput });
+    self.setState({creator:self.state.creator, cpuPlaying: true, player: self.state.cpuPlayerInput });
     axios
       .post(URL_BASE + "games/", {
         gameType: "vsCPU",
@@ -88,6 +99,7 @@ class Game extends Component {
         creator: self.state.cpuPlayerInput,
       })
       .then(function (response) {
+        console.log('Fetched first');
         console.log(response.data);
         self.gameData.boxes = response.data.boxes;
         self.setState({
@@ -96,6 +108,7 @@ class Game extends Component {
           currentTurn: response.data.currentTurn,
           boxes: response.data.boxes,
           mode: "game",
+          creator: response.data.creator,
           cpuPlayer: response.data.cpuPlayer,
           gameLevel: self.state.gameLevel,
         });
@@ -112,7 +125,7 @@ class Game extends Component {
     this.setState({ loading: true });
 
     var self = this;
-    this.setState({ player: self.state.createGameInput });
+    this.setState({creator:this.state.creator, player: self.state.createGameInput });
     axios
       .post(URL_BASE + "games/", {
         gameType: "vsPlayer",
@@ -125,7 +138,7 @@ class Game extends Component {
         console.log(response.data);
         self.gameData.boxes = response.data.boxes;
         // console.log(self.gameData.boxes);
-        self.setState({
+        self.setState({creator:response.data.creator,
           gameType: response.data.gameType,
           gameId: response.data.gameId,
           currentTurn: response.data.currentTurn,
@@ -196,7 +209,7 @@ class Game extends Component {
   };
 
   handleCpuPlayerChange = (e) => {
-    this.setState({ cpuPlayerInput: e.target.value });
+    this.setState({cpuPlayerInput: e.target.value });
     console.log(e.target.value);
   };
   handleGameLevel = (e) => {
@@ -408,7 +421,7 @@ class Game extends Component {
         });
       if (self.state.gameOver) {
         self.colorBlack();
-        //this.setState({ check: false });
+        //this.setState({creator:this.state.creator, check: false });
       }
     }, 1000);
   }
@@ -475,6 +488,7 @@ class Game extends Component {
     let self = this;
     self.setState({ loading: true });
     self.setState({
+      
       // cpuPlayer: "X",
       //gameLevel: "hard",
       bgArray: Array(9).fill(""),
@@ -497,6 +511,7 @@ class Game extends Component {
       gameOver: false,
       boxes: Array(9).fill(""),
       check: true,
+      
     });
     self.gameData = {
       boxes: Array(9).fill(""),
@@ -505,7 +520,7 @@ class Game extends Component {
 
     setTimeout(() => {
       this.updateAfterClick();
-      self.setState({ loading: false });
+      self.setState({loading: false });
       if (this.state.player === "O" && this.state.cpuPlaying) {
         this.cpuMove();
         //alert('moving now')
@@ -652,6 +667,7 @@ class Game extends Component {
 
     e.target.focus();
     this.setState({ copySuccess: "Copied!" });
+    setTimeout(()=>{this.setState({copySuccess:""})},1500);
   };
   bestCpuMove() {
     let temp = this.state.boxes;
@@ -699,7 +715,7 @@ class Game extends Component {
   //     if (temp[i] === "") {
   //       temp[i] = this.state.player === "X" ? "O" : "X";
   //       console.log(temp);
-  //       this.setState({
+  //       this.setState({creator:this.state.creator,
   //         currentTurn: this.state.player === "X" ? "X" : "O",
   //         totalMoves: this.gameData.totalMoves++,
   //         boxes: temp,
@@ -737,6 +753,7 @@ class Game extends Component {
     setTimeout(() => {
       this.setState({ loading: true });
       this.setState({
+        creator: "",
         cpuPlayer: "X",
         gameLevel: "hard",
         bgArray: Array(9).fill(""),
@@ -764,7 +781,7 @@ class Game extends Component {
         boxes: Array(9).fill(""),
         totalMoves: 0,
       };
-      this.setState({ loading: false });
+      this.setState({loading: false });
     }, 1000);
   }
   goHome() {
@@ -825,8 +842,9 @@ class Game extends Component {
                             <option>X</option>
                             <option>O</option>
                           </select>
-                          <br></br>
-                          <div className="form-group">
+                          
+                          
+                          <div className="form-group mb-3">
                             <h6>Game Level:</h6>
                             <input
                               type="radio"
@@ -965,7 +983,7 @@ class Game extends Component {
                     </div>
                     <br></br>
                     <div className="row">
-                      <div className="col-6 col-sm-12 col-md-12 col-lg-12">
+                      <div className="col-6 col-sm-12 col-md-12 col-lg-12 mb-3">
                         <div className="card text-white bg-info text-center">
                           <div className="card-header">X - Score</div>
                           <div className="card-body">
@@ -974,7 +992,7 @@ class Game extends Component {
                         </div>
                       </div>
 
-                      <div className="col-6 col-sm-12 col-md-12 col-lg-12">
+                      <div className="col-6 col-sm-12 col-md-12 col-lg-12 mb-3">
                         <div className="card text-white bg-danger text-center">
                           <div className="card-header">O - Score</div>
                           <div className="card-body">
@@ -1002,19 +1020,19 @@ class Game extends Component {
                     Home
                   </button>{" "}
                   {"\t\t"}
-                  {this.state.creator===this.state.player && (
-                      <button
-                        className="btn btn-danger"
-                        onClick={this.restartMatch}
-                        value="Home"
-                      >
-                        <img
-                          src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
-                          alt=""
-                        />{" "}
-                        Restart
-                      </button>
-                    )}
+                  {this.state.creator === this.state.player && (
+                    <button
+                      className="btn btn-danger"
+                      onClick={this.restartMatch}
+                      value="Home"
+                    >
+                      <img
+                        src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
+                        alt=""
+                      />{" "}
+                      Restart
+                    </button>
+                  )}
                 </div>
               </div>
               {this.state.gameOver &&
@@ -1028,17 +1046,21 @@ class Game extends Component {
                       : this.state.winner !== "draw"
                       ? " and you lost:( "
                       : " and match drawn "}{" "}
-                   {this.state.player===this.state.creator ? (<button
-                      className="btn btn-danger"
-                      onClick={this.restartMatch}
-                      value="Home"
-                    >
-                      <img
-                        src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
-                        alt=""
-                      />{" "}
-                      Restart
-                    </button>): "Ask the game creator to restart"} {" "}
+                    {this.state.player === this.state.creator ? (
+                      <button
+                        className="btn btn-danger"
+                        onClick={this.restartMatch}
+                        value="Home"
+                      >
+                        <img
+                          src="https://img.icons8.com/cute-clipart/24/000000/restart.png"
+                          alt=""
+                        />{" "}
+                        Restart
+                      </button>
+                    ) : (
+                      "Ask the game creator to restart"
+                    )}{" "}
                     to keep playing :)
                   </div>
                 )}
@@ -1214,9 +1236,9 @@ class Game extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-sm-2 col-md-2 col-lg-2  justify-content-center">
+            <div className="col-12 col-sm-2 col-md-2 col-lg-2 mb-3 justify-content-center">
               <div className="row">
-                <div className="col-12" id="side-nav-right">
+                <div className="col-12 mb-3" id="side-nav-right">
                   <div className="text-center ">
                     <div className="card text-white bg-primary text-center">
                       <div className="card-header">
@@ -1229,29 +1251,26 @@ class Game extends Component {
                           className="card-title"
                           onClick={this.copyToClipboard}
                         >
-                          <textarea
-                            rows="10"
-                            cols="1"
-                            ref={(textarea) => (this.textArea = textarea)}
-                            value={this.state.gameId}
-                          />
+                          <input class="form-control" type="text" placeholder="" ref={(textarea) => (this.textArea = textarea)} value={this.state.gameId} readonly></input>
+                         
                           <div className="text-center clicker">
                             <button
                               onClick={this.copyToClipboard}
-                              className="btn btn-sm"
+                              className="btn btn-sm btn-success"
                             >
-                              Click to copy{" "}
+                              {this.state.copySuccess===""?'Click to copy':this.state.copySuccess}{" "}
                               <img
                                 src="https://img.icons8.com/carbon-copy/24/000000/copy.png"
                                 alt=""
                               />
+                              
                             </button>
                           </div>
                         </h5>
                       </div>
                     </div>
-                    <br></br>
-                    <div className="card text-white bg-info text-center">
+                    <div class="mb-3">
+                    <div className="card text-white bg-info text-center ">
                       <div className="card-header">Playing As</div>
                       <div className="card-body">
                         <h5 className="card-title">
@@ -1278,7 +1297,7 @@ class Game extends Component {
                         </div>
                       </React.Fragment>
                     )}
-                  </div>
+                  </div></div>
                 </div>
               </div>
             </div>

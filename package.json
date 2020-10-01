@@ -20,7 +20,7 @@
     "heroku-postbuild": "npm run install-client && npm run build",
     "start": "node server.js",
     "client": "cd react-client && npm start",
-    "dev": "npm run heroku-postbuild && npm run start"
+    "dev": "concurrently \"nodemon server.js\" \"npm run client\""
   },
   "repository": {
     "type": "git",
