@@ -95,6 +95,7 @@ class Game extends Component {
           currentTurn: response.data.currentTurn,
           boxes: response.data.boxes,
           mode: "game",
+          cpuPlayer: response.data.cpuPlayer,
           gameLevel: self.state.gameLevel,
         });
         self.setState({ loading: false });
@@ -360,7 +361,6 @@ class Game extends Component {
     var self = this;
     axios.put(URL_BASE + "games/" + self.state.gameId, {
       winner: self.state.winner,
-
       boxes: self.state.boxes,
       gameOver: self.state.gameOver,
       totalMoves: self.state.totalMoves,
@@ -372,7 +372,7 @@ class Game extends Component {
       oWins: self.state.oWins,
     });
     if (this.state.cpuPlaying) {
-      this.setState({ currentTurn: this.state.player });
+      this.setState({ currentTurn: this.state.cpuPlayer });
     }
   }
 
