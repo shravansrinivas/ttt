@@ -6,15 +6,15 @@ const dotenv = require("dotenv").config();
 
 var URL_BASE=undefined;
 // let URL_BASE= process.env.REACT_APP_BACKEND_URL_BASE;
-if (process.env.scope == "PROD") {
+//if (process.env.scope == "PROD") {
   console.log("Using PROD");
    URL_BASE = "/api/";
-} else  {
-  console.log("Using DEV");
-  let PORT= 3005;
+// } else  {
+//   console.log("Using DEV");
+//   let PORT= 3005;
 
-   URL_BASE = `http://localhost:${PORT}/api/`;
-}
+//    URL_BASE = `http://localhost:${PORT}/api/`;
+// }
 
 class Game extends Component {
   constructor() {
@@ -70,6 +70,7 @@ class Game extends Component {
       this.state.gameType === "vsPlayer"
     ) {
       setInterval(this.pollTillChance(), 500);
+      
       // if (self.state.gameOver) {
       //   self.colorBlack();
       //   //this.setState({creator:this.state.creator, check: false });
